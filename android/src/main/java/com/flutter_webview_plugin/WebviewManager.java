@@ -34,6 +34,7 @@ import java.io.File;
 import java.util.Date;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.net.CookiePolicy;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -141,6 +142,12 @@ class WebviewManager {
                 }else {
                     super.onReceivedSslError(view, handler, error);
                 }
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                CookieManager.getInstance().flush();
             }
         };
         webView.setOnKeyListener(new View.OnKeyListener() {
@@ -380,7 +387,8 @@ class WebviewManager {
             String invalidUrlRegex,
             boolean geolocationEnabled,
             boolean debuggingEnabled,
-            boolean ignoreSSLErrors
+            boolean ignoreSSLErrors,
+            boolean thirdPartyCookiesEnabled
     ) {
         webView.getSettings().setJavaScriptEnabled(withJavascript);
         webView.getSettings().setBuiltInZoomControls(withZoom);
@@ -418,6 +426,11 @@ class WebviewManager {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        }
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, thirdPartyCookiesEnabled);
         }
 
         if (clearCache) {

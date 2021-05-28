@@ -166,6 +166,7 @@ class FlutterWebviewPlugin {
     bool geolocationEnabled = false,
     bool debuggingEnabled = false,
     bool ignoreSSLErrors = false,
+    bool thirdPartyCookiesEnabled = true,
   }) async {
     final args = <String, dynamic>{
       'url': url,
@@ -191,6 +192,7 @@ class FlutterWebviewPlugin {
       'withOverviewMode': withOverviewMode,
       'debuggingEnabled': debuggingEnabled,
       'ignoreSSLErrors': ignoreSSLErrors,
+      'thirdPartyCookiesEnabled': thirdPartyCookiesEnabled,
     };
 
     if (headers != null) {
